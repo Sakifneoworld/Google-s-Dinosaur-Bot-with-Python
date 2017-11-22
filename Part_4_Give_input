@@ -1,0 +1,19 @@
+import numpy as np
+import cv2
+from PIL import ImageGrab
+from key import PressKey, ReleaseKey, W
+
+def jump():
+    PressKey(W)
+    ReleaseKey(W)
+
+
+
+while True:
+    dino = np.array(ImageGrab.grab(bbox = (50,200,650,500)))
+    cv2.imshow('DINO',dino)
+    jump()
+
+    if cv2.waitKey(25) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+        break
