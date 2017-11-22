@@ -42,7 +42,7 @@ while True:
     dino_black = cv2.cvtColor(dino, cv2.COLOR_BGR2GRAY)
     #cv2.imshow('DINO_BLACK',dino_black)
     #print(dino_black)
-    ret, dino_inv = cv2.threshold(dino_black,200,255,cv2.THRESH_BINARY)
+    ret, dino_inv = cv2.threshold(dino_black,200,255,cv2.THRESH_BINARY_INV)
     #cv2.imshow('DINO_INV',dino_inv)
     #image_recognition(dino_inv,dino)
 
