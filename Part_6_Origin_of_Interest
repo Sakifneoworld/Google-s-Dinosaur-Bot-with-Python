@@ -3,36 +3,38 @@ import cv2
 from PIL import ImageGrab
 from key import PressKey, ReleaseKey, W
 
-
 def jump():
     PressKey(W)
-    #ReleaseKey(W)
+    ReleaseKey(W)
 
-#big_tree = cv2.imread('bigtree.png',0)
-#w,h = big_tree.shape[::-1]
-#font = cv2.FONT_HERSHEY_SIMPLEX
+
+big_tree = cv2.imread('big_tree.png',0)
+w,h = big_tree.shape[::-1]
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def image_recognition(dino_inv,dino):
-    #cv2.imshow('DINO_inv',dino_inv)
+    #cv2.imshow('DINO_INV',dino_inv)
     #print(big_tree)
     res = cv2.matchTemplate(dino_inv, big_tree,cv2.TM_CCOEFF_NORMED)
-    match = .75
+    match = .60
 
-    loc = np.where(res >=match)
+    loc = np.where(res >= match)
 
     for pt in zip(*loc[::-1]):
-        cv2.rectangle(dino, pt,(pt[0]+w,pt[1]+h+5),(0,255,0),2)
-        cv2.putText(dino,'TREE',(pt[0],pt[1]),font,1,(0,255,0),1,cv2.LINE_AA)
-    cv2.imshow('DINO_inv',dino)
-    
-def roi (img, vertices):
+        cv2.putText(dino,'TREE', (pt[0],pt[1]),font,1,(0,255,0),1,cv2.LINE_AA)
+        cv2.rectangle(dino, pt, (pt[0]+w,pt[1]+h+3),(0,255,0),2)
+    cv2.imshow('DINO_reconition',dino)
+
+
+def roi(img,vertices):
     mask = np.zeros_like(img)
-    cv2.fillPoly(mask, vertices, 255)
+    cv2.fillPoly(mask, vertices,255)
     masked = cv2.bitwise_and(img, mask)
     return masked
     
-    
+
+
 while True:
     dino = np.array(ImageGrab.grab(bbox = (50,200,650,500)))
     #cv2.imshow('DINO',dino)
@@ -40,22 +42,33 @@ while True:
     #print(dino)
 
     dino_black = cv2.cvtColor(dino, cv2.COLOR_BGR2GRAY)
-    #cv2.imshow('DINO_BLACK',dino_black)
+    #cv2.imshow('DINO_black',dino_black)
     #print(dino_black)
+
     ret, dino_inv = cv2.threshold(dino_black,200,255,cv2.THRESH_BINARY_INV)
-    #cv2.imshow('DINO_INV',dino_inv)
-    #image_recognition(dino_inv,dino)
+    #cv2.imshow('DINO_THESH',dino_inv)
 
-    #cv2.imwrite('tree.png',dino_inv)
+    #cv2.imwrite('tree.png',dino_black)
 
-    cv2.rectangle(dino,(150,220),(180,257), [255,0,0], 2)
-    vertices = np.array([[150,220],[180,220],[180,257],[150,257]], np.int32)
-    dino_roi = roi(dino_inv, [vertices])
+    #image_recognition(dino_black,dino)
+
+    cv2.rectangle(dino,(150,220), (180,257), [255,0,0],2)
+    cv2.imshow('DINO_R',dino)
+    vertices = np.array([[150,220],[180,220],[180,257],[150,257]],np.int32)
+    
+
+
+    dino_roi = roi(dino_inv,[vertices])
     cv2.imshow('ROI',dino_roi)
-        
-    cv2.imshow('DINO',dino)
+
+
+    
+
+    
+
 
     
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
         break
+
